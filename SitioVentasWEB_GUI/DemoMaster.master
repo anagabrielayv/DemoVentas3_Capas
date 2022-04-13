@@ -1,0 +1,88 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="DemoMaster.master.cs" Inherits="DemoMaster" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <meta charset="utf-8">
+    <title> Demos WEB -ISIL Aprende haciendo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="CSS/DemoCSS.css" rel="stylesheet" type="text/css" />
+    
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>    
+    <asp:ContentPlaceHolder id="head" runat="server">
+
+    </asp:ContentPlaceHolder>
+</head>
+<body style="background:#f3f4ee;">
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnableScriptGlobalization="True"></asp:ScriptManager>
+   <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" ShowStartingNode="False" />
+        <asp:Menu ID="Menu1" runat="server" BackColor="#FFFBD6" DataSourceID="SiteMapDataSource1" DynamicHorizontalOffset="2" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#990000" Orientation="Horizontal" StaticSubMenuIndent="10px">
+                <DynamicHoverStyle BackColor="#990000" ForeColor="White" />
+                <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+                <DynamicMenuStyle BackColor="#FFFBD6" />
+                <DynamicSelectedStyle BackColor="#FFCC66" />
+                <StaticHoverStyle BackColor="#990000" ForeColor="White" />
+                <StaticMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" />
+                <StaticSelectedStyle BackColor="#FFCC66" />
+            </asp:Menu>
+         <div>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+    <%--AGREGAR FINAL: Se agrega este script java con el manejo de la expiracion de la sesion....--%>
+    <%--Impide emplear el boton Regresar en el navegador--%>
+    <script language="javascript" type="text/javascript">
+        javascript:window.history.forward(1);
+         </script>
+      <script language="javascript" type="text/javascript">
+      var sessionTimeoutWarning =
+  "<%= System.Configuration .ConfigurationManager .AppSettings["AdvertenciaSession"].ToString()%> "
+      var sessionTimeout = "<%= Session.Timeout %>";
+      var timeOnPageLoad = new Date();
+
+      //Para la advertencia ....
+      setTimeout('SessionWarning()', parseInt(sessionTimeoutWarning) * 60 * 1000);
+      //Para redireccionar a otra pagina
+      setTimeout('RedirectToWelcomePage()',parseInt(sessionTimeout) * 60 * 1000);
+
+      //Funcion de advertencia....
+      function SessionWarning() {
+          //Tiempo antes de expirar
+          var minutesForExpiry =  (parseInt(sessionTimeout) -
+              parseInt(sessionTimeoutWarning));
+          var message = "Tu sesion va a expirar en... " + minutesForExpiry +
+          " minutos. Por favor graba o realiza alguna accion.";
+          alert(message);
+          var currentTime = new Date();
+          //Tiempo de expiracion
+          var timeForExpiry = timeOnPageLoad.setMinutes(timeOnPageLoad.getMinutes()
+              + parseInt(sessionTimeout));
+
+          //Si en caso la hora actual ha superado el tiempo de expiracion
+          if(Date.parse(currentTime) > timeForExpiry)
+          {
+              alert("La sesion ha expirado. Seras redireccionado a la pagina de bienvenida");
+              window.location = "../WebLogin.aspx";
+          }
+      }
+
+      //Funcion para la redireccion a la pagina WebLoginText.aspx....
+      function RedirectToWelcomePage(){
+          alert("La sesion ha expirado. Seras redireccionado a la pagina de bienvenida");
+          window.location = "../WebLogin.aspx";
+      }
+      </script>
+     <%--FINAL : Fin del script de la validacion de la sesion.--%>
+        </asp:ContentPlaceHolder>
+
+   
+
+    </div>
+    </form>
+    
+
+   
+      
+</body>
+</html>
